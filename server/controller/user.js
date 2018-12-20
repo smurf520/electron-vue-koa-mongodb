@@ -1,4 +1,4 @@
-const User = require('../db.js').User
+const User = require('../db')
 // 下面这两个包用来生成时间
 const moment = require('moment')
 const objectIdToTimestamp = require('objectid-to-timestamp')
@@ -88,15 +88,15 @@ const Login = async (ctx) => {
 }
 // 注册
 const Reg = async (ctx) => {
-  let user = new User({
+  let user1 = new User({
     username: ctx.request.body.name,
     password: sha1(ctx.request.body.pass), // 加密
-    token: createToken(this.username), // 创建token并存入数据库
-    create_time: moment(objectIdToTimestamp(user._id)).format('YYYY-MM-DD HH:mm:ss') // 将objectid转换为用户创建时间
+    token: createToken(this.username) // 创建token并存入数据库
+    // create_time: moment(objectIdToTimestamp(user._id)).format('YYYY-MM-DD HH:mm:ss') // 将objectid转换为用户创建时间
   })
   // 将objectid转换为用户创建时间(可以不用)
-  user.create_time = moment(objectIdToTimestamp(user._id)).format('YYYY-MM-DD HH:mm:ss')
-  let doc = await findUser(user.username)
+  user1.create_time = moment(objectIdToTimestamp(user1._id)).format('YYYY-MM-DD HH:mm:ss')
+  let doc = await findUser(user1.username)
   if (doc) {
     console.log('用户名已经存在')
     ctx.status = 200
@@ -105,7 +105,7 @@ const Reg = async (ctx) => {
     }
   } else {
     await new Promise((resolve, reject) => {
-      user.save((err) => {
+      user1.save((err) => {
         if (err) {
           reject(err)
         }
@@ -148,5 +148,3 @@ module.exports = {
   GetAllUsers,
   DelUser
 }
-
-
