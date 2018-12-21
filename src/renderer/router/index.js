@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from './../components/login.vue'
-import Register from './../components/register.vue'
+import Chat from './../components/chat.vue'
+// import Login from './../components/login.vue'
+// import Register from './../components/register.vue'
 // import store from './../store/index'
 
 Vue.use(Router)
@@ -10,19 +11,28 @@ const router = new Router({
   mode: 'history',
   routes: [{
     path: '/',
-    name: 'login',
-    component: Login,
-    meta: {
-      requiresAuth: true
-    }
-  }, {
-    path: '/register',
-    name: 'register',
-    component: Register
+    name: 'chat',
+    component: Chat
   }, {
     path: '*',
     redirect: '/'
   }]
+  // 注释打开就能用路由功能
+  // routes: [{
+  //   path: '/',
+  //   name: 'login',
+  //   component: Login,
+  //   meta: {
+  //     requiresAuth: true
+  //   }
+  // }, {
+  //   path: '/register',
+  //   name: 'register',
+  //   component: Register
+  // }, {
+  //   path: '*',
+  //   redirect: '/'
+  // }]
 })
 
 // //  注册全局钩子用来拦截导航

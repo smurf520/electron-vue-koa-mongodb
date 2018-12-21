@@ -11,6 +11,8 @@ app.use(Koalogger())
 const UserController = require('./controller/user')
 // checkToken作为中间件存在
 const checkToken = require('./token/checkToken')
+const websockify = require('koa-websocket')
+const socket = websockify(app)
 // 登录
 const loginRouter = new Router()
 loginRouter.post('/login', UserController.Login)
@@ -32,4 +34,17 @@ router.use('/api', delUserRouter.routes(), delUserRouter.allowedMethods())
 app.use(router.routes()).use(router.allowedMethods())
 app.listen(8888, () => {
   console.log('The server is running at http://localhost:' + 8888)
+})
+let ctxs = []
+socket.ws.use((ctx, next) => {
+  /* 每打开一个连接就往 上线文数组中 添加一个上下文 */
+  ctxs.push(ctx)
+  ctx.websocket.on('message', (message) => {
+    ctx.websocket.send(message)
+  })
+  ctx.websocket.on('close', (message) => {
+    /* 连接关闭时, 清理 上下文数组, 防止报错 */
+    let index = ctxs.indexOf(ctx)
+    ctxs.splice(index, 1)
+  })
 })
