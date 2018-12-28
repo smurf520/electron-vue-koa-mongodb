@@ -40,7 +40,10 @@ socket.ws.use((ctx, next) => {
   /* 每打开一个连接就往 上线文数组中 添加一个上下文 */
   ctxs.push(ctx)
   ctx.websocket.on('message', (message) => {
-    ctx.websocket.send(message)
+    for (let i = 0; i < ctxs.length; i++) {
+      if (ctx === ctxs[i]) continue
+      ctxs[i].websocket.send(message)
+    }
   })
   ctx.websocket.on('close', (message) => {
     /* 连接关闭时, 清理 上下文数组, 防止报错 */
